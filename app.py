@@ -876,10 +876,14 @@ if uploaded_file:
     elif feature == "Draw on Image":
         stroke_width = st.slider("Brush Width", 1, 25, 5)
         stroke_color = st.color_picker("Brush Color", "#FF0000")
-
-        # Make sure image is in RGBA (required for blending)
+    
+        # Convert image to RGBA (canvas + overlay compatible)
+        if isinstance(image, np.ndarray):  # If image is OpenCV format
+            image = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+    
         original_rgba = image.convert("RGBA")
-
+    
+        # Drawable canvas component
         canvas_result = st_canvas(
             fill_color="rgba(255, 0, 0, 0.0)",  # Transparent fill
             stroke_width=stroke_width,
@@ -891,40 +895,41 @@ if uploaded_file:
             drawing_mode="freedraw",
             key="canvas",
         )
-
+    
         if canvas_result.image_data is not None:
-            # Canvas result: user drawing as full image
-            drawn_rgba = Image.fromarray(canvas_result.image_data.astype(np.uint8))
-
-            # --- Download the drawn image alone (annotation layer) ---
+            # Convert drawn layer to PIL image
+            drawn_rgba = Image.fromarray(canvas_result.image_data.astype(np.uint8)).convert("RGBA")
+    
+            # 🖼 Download annotation layer
             buf_annot = io.BytesIO()
-            drawn_rgba.convert("RGB").save(buf_annot, format="JPEG")  # RGB avoids JPEG error
+            drawn_rgba.convert("RGB").save(buf_annot, format="JPEG")
             buf_annot.seek(0)
-
             st.download_button(
                 label="Download Drawing Only",
                 data=buf_annot.getvalue(),
                 file_name=f"annotation_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg",
                 mime="image/jpeg"
             )
-
-            # --- Overlay annotation on original image ---
+    
+            # 🧩 Combine original + annotation
             combined = Image.alpha_composite(original_rgba, drawn_rgba)
-
-            # Show the result
+    
+            # Display result
             st.image(combined, caption="Combined Image (Original + Annotation)", use_column_width=True)
-
-            # --- Download the combined image ---
+    
+            # 📥 Download combined image
             buf_combined = io.BytesIO()
             combined.convert("RGB").save(buf_combined, format="JPEG")
             buf_combined.seek(0)
-
             st.download_button(
                 label="Download Combined Image",
                 data=buf_combined.getvalue(),
                 file_name=f"combined_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg",
                 mime="image/jpeg"
             )
+        else:
+            st.info("Use the brush to draw on the image above.")
+
 
 
 
