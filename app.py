@@ -27,9 +27,9 @@ if 'theme' not in st.session_state:
 st.set_page_config(page_title="VisionPro", layout="wide")
 
 # Function to toggle theme
-'''def toggle_theme():
+def toggle_theme():
     st.session_state.theme = 'light' if st.session_state.theme == 'dark' else 'dark'
-    #st.experimental_rerun()'''
+    #st.experimental_rerun()
 
 # Apply theme based on session state
 if st.session_state.theme == 'dark':
@@ -374,20 +374,11 @@ st.markdown(f"""
 # Create a cleaner sidebar
 st.sidebar.markdown(f"<h3 style='color: {title_color}; margin-bottom: 20px;'>⚙️ Controls</h3>", unsafe_allow_html=True)
 
-# --- In the sidebar or header section ---
-theme_toggle = st.toggle("Dark Mode", value=(st.session_state.theme == 'dark'))
-
-# --- Update theme without rerun ---
-st.session_state.theme = 'dark' if theme_toggle else 'light'
-
-# You can now use the theme like:
-bg_color = "#1c1c1e" if st.session_state.theme == 'dark' else "#ffffff"
-text_color = "#f5f5f7" if st.session_state.theme == 'dark' else "#1d1d1f"
 
 # Theme toggle in sidebar with Apple-like button
-'''theme_icon = "🌙" if st.session_state.theme == 'light' else "☀️"
+theme_icon = "🌙" if st.session_state.theme == 'light' else "☀️"
 theme_text = "Light Mode" if st.session_state.theme == 'dark' else "Dark Mode"
-st.sidebar.button(f"{theme_icon} {theme_text}", on_click=toggle_theme)'''
+st.sidebar.button(f"{theme_icon} {theme_text}", on_click=toggle_theme)
 
 st.sidebar.markdown(f"<p style='color: {subtitle_color}; margin-top: 25px; margin-bottom: 10px;'>Image Source</p>", unsafe_allow_html=True)
 source_type = st.sidebar.radio("", ["Upload", "Webcam"], index=0, label_visibility="collapsed")
