@@ -885,18 +885,24 @@ if uploaded_file:
         stroke_width = st.slider("Brush Width", 1, 25, 5)
         stroke_color = st.color_picker("Brush Color", "#FF0000")
     
-        # Convert image to RGBA
+        # Convert original image to RGBA (needed for overlay)
         rgba_image = image.convert("RGBA")
     
-        # ✅ Convert to base64 data URL for compatibility
-        bg_image_url = pil_image_to_data_url(rgba_image)
+        # Convert to base64 URL so Streamlit Cloud can use it
+        import base64
+        def image_to_url(pil_img):
+            buffered = io.BytesIO()
+            pil_img.save(buffered, format="PNG")
+            encoded = base64.b64encode(buffered.getvalue()).decode()
+            return f"data:image/png;base64,{encoded}"
+    
+        bg_image_url = image_to_url(rgba_image)
     
         canvas_result = st_canvas(
             fill_color="rgba(255, 0, 0, 0.0)",  # Transparent fill
             stroke_width=stroke_width,
             stroke_color=stroke_color,
-            background_image=rgba_image,
-            background_image_url=bg_image_url,  # manually created URL
+            background_image_url=bg_image_url,  # ✅ Only use the URL version
             update_streamlit=True,
             height=rgba_image.height,
             width=rgba_image.width,
@@ -905,15 +911,14 @@ if uploaded_file:
         )
     
         if canvas_result.image_data is not None:
-            drawn_rgba = Image.fromarray(canvas_result.image_data.astype(np.uint8)).convert("RGBA")
-            combined = Image.alpha_composite(rgba_image, drawn_rgba)
+            # Convert drawn canvas back to image
+            drawn_rgba = Image.fromarray(canvas_result.image_data.astype(np.uint8))
     
-            st.image(combined, caption="Combined Image", use_column_width=True)
-    
-            # Download buttons
+            # --- Download annotation only ---
             buf_annot = io.BytesIO()
             drawn_rgba.convert("RGB").save(buf_annot, format="JPEG")
             buf_annot.seek(0)
+    
             st.download_button(
                 label="Download Drawing Only",
                 data=buf_annot.getvalue(),
@@ -921,9 +926,16 @@ if uploaded_file:
                 mime="image/jpeg"
             )
     
+            # --- Merge drawing and original ---
+            combined = Image.alpha_composite(rgba_image, drawn_rgba)
+    
+            st.image(combined, caption="Combined Image (Original + Drawing)", use_column_width=True)
+    
+            # --- Download combined image ---
             buf_combined = io.BytesIO()
             combined.convert("RGB").save(buf_combined, format="JPEG")
             buf_combined.seek(0)
+    
             st.download_button(
                 label="Download Combined Image",
                 data=buf_combined.getvalue(),
