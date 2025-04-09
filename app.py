@@ -877,30 +877,36 @@ if uploaded_file:
         stroke_width = st.slider("Brush Width", 1, 25, 5)
         stroke_color = st.color_picker("Brush Color", "#FF0000")
     
-        # Convert image to RGBA (canvas + overlay compatible)
-        if isinstance(image, np.ndarray):  # If image is OpenCV format
-            image = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+        # ✅ Convert to RGB first, then to RGBA (streamlit_drawable_canvas needs RGBA mode)
+        if isinstance(image, np.ndarray):
+            pil_image = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+        else:
+            pil_image = image
     
-        original_rgba = image.convert("RGBA")
+        rgba_image = pil_image.convert("RGBA")
     
-        # Drawable canvas component
+        # 🖌️ Drawable canvas
         canvas_result = st_canvas(
             fill_color="rgba(255, 0, 0, 0.0)",  # Transparent fill
             stroke_width=stroke_width,
             stroke_color=stroke_color,
-            background_image=original_rgba,
+            background_image=rgba_image,
             update_streamlit=True,
-            height=original_rgba.height,
-            width=original_rgba.width,
+            height=rgba_image.height,
+            width=rgba_image.width,
             drawing_mode="freedraw",
             key="canvas",
         )
     
         if canvas_result.image_data is not None:
-            # Convert drawn layer to PIL image
             drawn_rgba = Image.fromarray(canvas_result.image_data.astype(np.uint8)).convert("RGBA")
     
-            # 🖼 Download annotation layer
+            # 🧩 Combine original image + drawing
+            combined = Image.alpha_composite(rgba_image, drawn_rgba)
+    
+            st.image(combined, caption="Combined Image", use_column_width=True)
+    
+            # 🖼 Download Drawing Only
             buf_annot = io.BytesIO()
             drawn_rgba.convert("RGB").save(buf_annot, format="JPEG")
             buf_annot.seek(0)
@@ -911,13 +917,7 @@ if uploaded_file:
                 mime="image/jpeg"
             )
     
-            # 🧩 Combine original + annotation
-            combined = Image.alpha_composite(original_rgba, drawn_rgba)
-    
-            # Display result
-            st.image(combined, caption="Combined Image (Original + Annotation)", use_column_width=True)
-    
-            # 📥 Download combined image
+            # 📥 Download Combined Image
             buf_combined = io.BytesIO()
             combined.convert("RGB").save(buf_combined, format="JPEG")
             buf_combined.seek(0)
@@ -929,8 +929,6 @@ if uploaded_file:
             )
         else:
             st.info("Use the brush to draw on the image above.")
-
-
 
 
     elif feature == "Canny Edge Detection":
