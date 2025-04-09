@@ -887,58 +887,49 @@ if uploaded_file:
     elif feature == "Draw on Image":
         stroke_width = st.slider("Brush Width", 1, 25, 5)
         stroke_color = st.color_picker("Brush Color", "#FF0000")
-    
-        # Convert original image to RGBA (needed for overlay)
-        rgba_image = image.convert("RGBA")
-    
-        # Convert to base64 URL so Streamlit Cloud can use it
-        import base64
-        def image_to_url(pil_img):
-            buffered = io.BytesIO()
-            pil_img.save(buffered, format="PNG")
-            encoded = base64.b64encode(buffered.getvalue()).decode()
-            return f"data:image/png;base64,{encoded}"
-    
-        bg_image_url = image_to_url(rgba_image)
-    
+
+        # Make sure image is in RGBA (required for blending)
+        original_rgba = image.convert("RGBA")
+
         canvas_result = st_canvas(
             fill_color="rgba(255, 0, 0, 0.0)",  # Transparent fill
             stroke_width=stroke_width,
             stroke_color=stroke_color,
-            background_image_url=bg_image_url,  # ✅ Only use the URL version
+            background_image=original_rgba,
             update_streamlit=True,
-            height=rgba_image.height,
-            width=rgba_image.width,
+            height=original_rgba.height,
+            width=original_rgba.width,
             drawing_mode="freedraw",
             key="canvas",
         )
-    
+
         if canvas_result.image_data is not None:
-            # Convert drawn canvas back to image
+            # Canvas result: user drawing as full image
             drawn_rgba = Image.fromarray(canvas_result.image_data.astype(np.uint8))
-    
-            # --- Download annotation only ---
+
+            # --- Download the drawn image alone (annotation layer) ---
             buf_annot = io.BytesIO()
-            drawn_rgba.convert("RGB").save(buf_annot, format="JPEG")
+            drawn_rgba.convert("RGB").save(buf_annot, format="JPEG")  # RGB avoids JPEG error
             buf_annot.seek(0)
-    
+
             st.download_button(
                 label="Download Drawing Only",
                 data=buf_annot.getvalue(),
                 file_name=f"annotation_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg",
                 mime="image/jpeg"
             )
-    
-            # --- Merge drawing and original ---
-            combined = Image.alpha_composite(rgba_image, drawn_rgba)
-    
-            st.image(combined, caption="Combined Image (Original + Drawing)", use_column_width=True)
-    
-            # --- Download combined image ---
+
+            # --- Overlay annotation on original image ---
+            combined = Image.alpha_composite(original_rgba, drawn_rgba)
+
+            # Show the result
+            st.image(combined, caption="Combined Image (Original + Annotation)", use_column_width=True)
+
+            # --- Download the combined image ---
             buf_combined = io.BytesIO()
             combined.convert("RGB").save(buf_combined, format="JPEG")
             buf_combined.seek(0)
-    
+
             st.download_button(
                 label="Download Combined Image",
                 data=buf_combined.getvalue(),
