@@ -7,6 +7,7 @@ import pytesseract
 from streamlit_drawable_canvas import st_canvas
 from streamlit_image_comparison import image_comparison
 from streamlit_image_coordinates import streamlit_image_coordinates
+from streamlit_drawable_canvas.utils import image_to_url
 import io
 from datetime import datetime
 
@@ -877,7 +878,7 @@ if uploaded_file:
         stroke_width = st.slider("Brush Width", 1, 25, 5)
         stroke_color = st.color_picker("Brush Color", "#FF0000")
     
-        # ✅ Convert to RGB first, then to RGBA (streamlit_drawable_canvas needs RGBA mode)
+        # Convert image to PIL and ensure RGBA
         if isinstance(image, np.ndarray):
             pil_image = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
         else:
@@ -885,12 +886,16 @@ if uploaded_file:
     
         rgba_image = pil_image.convert("RGBA")
     
-        # 🖌️ Drawable canvas
+        # ✅ Manually convert to URL using internal util
+        bg_image_url = image_to_url(rgba_image)
+    
+        # Draw canvas
         canvas_result = st_canvas(
             fill_color="rgba(255, 0, 0, 0.0)",  # Transparent fill
             stroke_width=stroke_width,
             stroke_color=stroke_color,
-            background_image=rgba_image,
+            background_image=rgba_image,  # This is still needed for layout
+            background_image_url=bg_image_url,  # This avoids the bug
             update_streamlit=True,
             height=rgba_image.height,
             width=rgba_image.width,
@@ -900,13 +905,11 @@ if uploaded_file:
     
         if canvas_result.image_data is not None:
             drawn_rgba = Image.fromarray(canvas_result.image_data.astype(np.uint8)).convert("RGBA")
-    
-            # 🧩 Combine original image + drawing
             combined = Image.alpha_composite(rgba_image, drawn_rgba)
     
             st.image(combined, caption="Combined Image", use_column_width=True)
     
-            # 🖼 Download Drawing Only
+            # Download buttons
             buf_annot = io.BytesIO()
             drawn_rgba.convert("RGB").save(buf_annot, format="JPEG")
             buf_annot.seek(0)
@@ -917,7 +920,6 @@ if uploaded_file:
                 mime="image/jpeg"
             )
     
-            # 📥 Download Combined Image
             buf_combined = io.BytesIO()
             combined.convert("RGB").save(buf_combined, format="JPEG")
             buf_combined.seek(0)
@@ -927,9 +929,7 @@ if uploaded_file:
                 file_name=f"combined_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg",
                 mime="image/jpeg"
             )
-        else:
-            st.info("Use the brush to draw on the image above.")
-
+   
 
     elif feature == "Canny Edge Detection":
         col1, col2 = st.columns(2)
