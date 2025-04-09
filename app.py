@@ -7,9 +7,16 @@ import pytesseract
 from streamlit_drawable_canvas import st_canvas
 from streamlit_image_comparison import image_comparison
 from streamlit_image_coordinates import streamlit_image_coordinates
-from streamlit_drawable_canvas.utils import image_to_url
 import io
 from datetime import datetime
+import base64
+
+def pil_image_to_data_url(img: Image.Image) -> str:
+    """Converts a PIL image to a data URL (base64) for Streamlit canvas."""
+    buffered = io.BytesIO()
+    img.save(buffered, format="PNG")
+    img_str = base64.b64encode(buffered.getvalue()).decode()
+    return f"data:image/png;base64,{img_str}"
 
 # Initialize session state for theme if it doesn't exist
 if 'theme' not in st.session_state:
@@ -878,24 +885,18 @@ if uploaded_file:
         stroke_width = st.slider("Brush Width", 1, 25, 5)
         stroke_color = st.color_picker("Brush Color", "#FF0000")
     
-        # Convert image to PIL and ensure RGBA
-        if isinstance(image, np.ndarray):
-            pil_image = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-        else:
-            pil_image = image
+        # Convert image to RGBA
+        rgba_image = image.convert("RGBA")
     
-        rgba_image = pil_image.convert("RGBA")
+        # ✅ Convert to base64 data URL for compatibility
+        bg_image_url = pil_image_to_data_url(rgba_image)
     
-        # ✅ Manually convert to URL using internal util
-        bg_image_url = image_to_url(rgba_image)
-    
-        # Draw canvas
         canvas_result = st_canvas(
             fill_color="rgba(255, 0, 0, 0.0)",  # Transparent fill
             stroke_width=stroke_width,
             stroke_color=stroke_color,
-            background_image=rgba_image,  # This is still needed for layout
-            background_image_url=bg_image_url,  # This avoids the bug
+            background_image=rgba_image,
+            background_image_url=bg_image_url,  # manually created URL
             update_streamlit=True,
             height=rgba_image.height,
             width=rgba_image.width,
@@ -929,7 +930,7 @@ if uploaded_file:
                 file_name=f"combined_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg",
                 mime="image/jpeg"
             )
-   
+
 
     elif feature == "Canny Edge Detection":
         col1, col2 = st.columns(2)
