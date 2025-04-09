@@ -10,6 +10,20 @@ from streamlit_image_coordinates import streamlit_image_coordinates
 import io
 from datetime import datetime
 
+# Initialize theme in session state
+if "theme" not in st.session_state:
+    st.session_state.theme = "dark"
+
+# Theme toggle button
+theme_toggle = st.sidebar.button(
+    f"Switch to {'Light' if st.session_state.theme == 'dark' else 'Dark'} Theme"
+)
+
+if theme_toggle:
+    st.session_state.theme = "light" if st.session_state.theme == "dark" else "dark"
+    st.experimental_rerun()
+
+
 # Initialize session state for theme if it doesn't exist
 if 'theme' not in st.session_state:
     st.session_state.theme = 'dark'  # Default to dark mode
