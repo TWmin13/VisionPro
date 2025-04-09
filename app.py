@@ -431,10 +431,11 @@ if uploaded_file:
     st.sidebar.markdown(f"<p style='color: {subtitle_color}; margin-top: 25px; margin-bottom: 10px;'>Processing</p>", unsafe_allow_html=True)
     feature = st.sidebar.selectbox("", [
         "Resize", "Histogram", "Histogram Equalization", "Contrast Stretching", "Thresholding",
-        "Color Pop", "Gray Level Slicing", "Bit Plane Slicing", "Filters", "Draw on Image",
+        "Color Pop", "Gray Level Slicing", "Bit Plane Slicing", "Filters",
         "Canny Edge Detection", "Cartoon Effect", "OCR (Text Extraction)", "Live FFT", "Pixel Inspector"], 
         label_visibility="collapsed")
 
+    
     # Display the selected feature name
     feature_title_color = "#f5f5f7" if st.session_state.theme == 'dark' else "#1d1d1f"
     st.markdown(f"<h2 style='color: {feature_title_color}; margin-top: 20px; margin-bottom: 20px;'>{feature}</h2>", unsafe_allow_html=True)
@@ -884,7 +885,7 @@ if uploaded_file:
             mime="image/jpeg"
         )
 
-    elif feature == "Draw on Image":
+    '''elif feature == "Draw on Image":
         stroke_width = st.slider("Brush Width", 1, 25, 5)
         stroke_color = st.color_picker("Brush Color", "#FF0000")
 
@@ -935,7 +936,7 @@ if uploaded_file:
                 data=buf_combined.getvalue(),
                 file_name=f"combined_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg",
                 mime="image/jpeg"
-            )
+            )'''
 
 
     elif feature == "Canny Edge Detection":
