@@ -11,6 +11,8 @@ import io
 from datetime import datetime
 import base64
 
+
+
 def pil_image_to_data_url(img: Image.Image) -> str:
     """Converts a PIL image to a data URL (base64) for Streamlit canvas."""
     buffered = io.BytesIO()
@@ -27,7 +29,7 @@ st.set_page_config(page_title="VisionPro", layout="wide")
 # Function to toggle theme
 def toggle_theme():
     st.session_state.theme = 'light' if st.session_state.theme == 'dark' else 'dark'
-    st.experimental_rerun()
+    #st.experimental_rerun()
 
 # Apply theme based on session state
 if st.session_state.theme == 'dark':
