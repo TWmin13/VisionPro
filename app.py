@@ -885,7 +885,7 @@ if uploaded_file:
             mime="image/jpeg"
         )
 
-    '''elif feature == "Draw on Image":
+    elif feature == "Draw on Image":
         stroke_width = st.slider("Brush Width", 1, 25, 5)
         stroke_color = st.color_picker("Brush Color", "#FF0000")
 
@@ -936,7 +936,7 @@ if uploaded_file:
                 data=buf_combined.getvalue(),
                 file_name=f"combined_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg",
                 mime="image/jpeg"
-            )'''
+            )
 
 
     elif feature == "Canny Edge Detection":
