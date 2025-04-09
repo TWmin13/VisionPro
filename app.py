@@ -27,7 +27,7 @@ if 'theme' not in st.session_state:
 st.set_page_config(page_title="VisionPro", layout="wide")
 
 # Function to toggle theme
-''''def toggle_theme():
+'''def toggle_theme():
     st.session_state.theme = 'light' if st.session_state.theme == 'dark' else 'dark'
     #st.experimental_rerun()'''
 
