@@ -22,7 +22,7 @@ def pil_image_to_data_url(img: Image.Image) -> str:
 if 'theme' not in st.session_state:
     st.session_state.theme = 'dark'  # Default to dark mode
 
-st.set_page_config(page_title="🧠 VisionPro", layout="wide")
+st.set_page_config(page_title="VisionPro", layout="wide")
 
 # Function to toggle theme
 def toggle_theme():
