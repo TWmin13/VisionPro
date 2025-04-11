@@ -468,7 +468,7 @@ subtitle_color = "#a1a1a6" if st.session_state.theme == 'dark' else "#6e6e73"
 
 st.markdown(f"""
     <h1 style='text-align: center; color: {title_color}; text-shadow: 0 2px 8px rgba(0,0,0,0.08);' class='fade-in'>🧠 VisionPro</h1>
-    <p style='text-align: center; font-size: 1.5rem; color: {subtitle_color}; margin-bottom: 30px;' class='fade-in'>Made for Creators. Built for Intelligence.</p>
+    <p style='text-align: center; font-size: 1.7rem; color: {subtitle_color}; margin-bottom: 30px;' class='fade-in'>Made for Creators. Built for Intelligence.</p>
 """, unsafe_allow_html=True)
 
 # Check if it's first load and no image is uploaded yet
