@@ -30,7 +30,7 @@ if 'first_load' not in st.session_state:
 if st.session_state.first_load:
     img_base64 = get_base64_image("big.jpg")
 
-st.set_page_config(page_title="🧠 VisionPro", layout="wide")
+st.set_page_config(page_title="Vision Pro", layout="wide")
 
 # Function to toggle theme
 def toggle_theme():
@@ -467,7 +467,7 @@ title_color = "#f5f5f7" if st.session_state.theme == 'dark' else "#1d1d1f"
 subtitle_color = "#a1a1a6" if st.session_state.theme == 'dark' else "#6e6e73"
 
 st.markdown(f"""
-    <h1 style='text-align: center; color: {title_color}; text-shadow: 0 2px 8px rgba(0,0,0,0.08);' class='fade-in'>🧠 VisionPro</h1>
+    <h1 style='text-align: center; color: {title_color}; text-shadow: 0 2px 8px rgba(0,0,0,0.08);' class='fade-in'>Vision Pro</h1>
     <p style='text-align: center; font-size: 1.5rem; color: {subtitle_color}; margin-bottom: 30px;' class='fade-in'>Made for Creators. Built for Intelligence.</p>
 """, unsafe_allow_html=True)
 
