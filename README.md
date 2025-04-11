@@ -1,6 +1,6 @@
 # Vision Pro
 
-**Vision Pro** is a powerful and intuitive computer vision application built for real-time image and video processing. It offers a rich suite of tools including webcam capture, OCR (Optical Character Recognition), color pop effects, live FFT visualization, pixel inspection, and advanced image filtering — all integrated into a sleek, black-themed Streamlit web app.
+**Vision Pro** is an intuitive computer vision application built for real-time image processing. It offers a rich suite of tools including webcam capture, OCR (Optical Character Recognition), color pop effects, live FFT visualization, pixel inspection, and advanced image filtering — all integrated into a sleek, black-themed Streamlit web app.
 
 Link to the Website: https://visionpro13.streamlit.app
 
