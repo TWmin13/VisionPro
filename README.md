@@ -59,7 +59,6 @@ streamlit run app.py
 ## 📁 Folder Structure
 
 vision-pro/  
-│  
 ├── app.py                  # Main Streamlit application  
 ├── requirements.txt        # All Python dependencies  
 ├── README.md               # Project documentation  
