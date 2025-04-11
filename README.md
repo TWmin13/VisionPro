@@ -39,7 +39,9 @@ cd vision-pro
 
 Ensure you have **Python 3.8+** installed. Then, install the required dependencies:
 
+```bash
 pip install -r requirements.txt
+```
 
 If you're using a virtual environment (recommended):
 
@@ -58,10 +60,10 @@ streamlit run app.py
 
 vision-pro/  
 │  
-├── app.py                # Main Streamlit application  
-├── requirements.txt      # All Python dependencies  
-├── README.md             # Project documentation  
-├── packages.txt          # System packages to install (e.g., tesseract-ocr)     
+├── app.py                  # Main Streamlit application  
+├── requirements.txt        # All Python dependencies  
+├── README.md               # Project documentation  
+├── packages.txt            # System packages to install (e.g., tesseract-ocr)     
 
 
 
