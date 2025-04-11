@@ -31,8 +31,8 @@ Link to the Website: https://visionpro13.streamlit.app
 ### Installation
 
 ```bash
-git clone https://github.com/your-username/vision-pro.git  
-cd vision-pro
+git clone https://github.com/your-username/VisionPro.git  
+cd VisionPro
 ```
 
 ## 🛠️ Set Up the Environment
