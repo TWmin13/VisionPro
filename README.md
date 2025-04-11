@@ -41,9 +41,9 @@ pip install -r requirements.txt
 
 If you're using a virtual environment (recommended):
 
-python -m venv venv
-source venv/bin/activate   # On Linux/Mac
-venv\Scripts\activate      # On Windows
+python -m venv venv  
+source venv/bin/activate     # On Linux/Mac  
+venv\Scripts\activate        # On Windows  
 pip install -r requirements.txt
 
 
