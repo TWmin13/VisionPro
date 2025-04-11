@@ -30,8 +30,10 @@ Link to the Website: https://visionpro13.streamlit.app
 
 ### Installation
 
-git clone https://github.com/your-username/vision-pro.git
+```bash
+git clone https://github.com/your-username/vision-pro.git  
 cd vision-pro
+```
 
 ## 🛠️ Set Up the Environment
 
@@ -41,11 +43,12 @@ pip install -r requirements.txt
 
 If you're using a virtual environment (recommended):
 
-python -m venv venv  
-source venv/bin/activate     # On Linux/Mac  
-venv\Scripts\activate        # On Windows  
+```bash
+python -m venv venv
+source venv/bin/activate   # On Linux/Mac
+venv\Scripts\activate      # On Windows
 pip install -r requirements.txt
-
+```
 
 ## Run the App
 
@@ -53,12 +56,12 @@ streamlit run app.py
 
 ## 📁 Folder Structure
 
-vision-pro/
-│
-├── app.py                # Main Streamlit application
-├── requirements.txt      # All Python dependencies
-├── README.md             # Project documentation
-├── packages.txt          # System packages to install (e.g., tesseract-ocr)    
+vision-pro/  
+│  
+├── app.py                # Main Streamlit application  
+├── requirements.txt      # All Python dependencies  
+├── README.md             # Project documentation  
+├── packages.txt          # System packages to install (e.g., tesseract-ocr)     
 
 
 
