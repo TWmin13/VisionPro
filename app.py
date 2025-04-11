@@ -560,7 +560,7 @@ if st.session_state.uploaded_file:
     st.sidebar.markdown(f"<p style='color: {subtitle_color}; margin-top: 25px; margin-bottom: 10px;'>Processing</p>", unsafe_allow_html=True)
     feature = st.sidebar.selectbox("", [
         "Resize", "Histogram", "Histogram Equalization", "Contrast Stretching", "Thresholding",
-        "Color Pop", "Gray Level Slicing", "Bit Plane Slicing", "Filters", "Draw on Image",
+        "Color Pop", "Gray Level Slicing", "Bit Plane Slicing", "Filters",
         "Canny Edge Detection", "Cartoon Effect", "OCR (Text Extraction)", "Live FFT", "Pixel Inspector"], 
         label_visibility="collapsed")
 
